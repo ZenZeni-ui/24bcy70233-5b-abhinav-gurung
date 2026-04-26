@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Management System</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: #333; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background: #4CAF50; color: white; }
+    tr:nth-child(even) { background: #f9f9f9; }
+    .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; font-size: 14px; }
+    .btn-green { background: #4CAF50; color: white; }
+    .btn-blue { background: #2196F3; color: white; }
+    .btn-red { background: #f44336; color: white; }
+    .success { background: #dff0d8; color: #3c763d; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+    .error { background: #f2dede; color: #a94442; padding: 10px; border-radius: 4px; margin-bottom: 15px; }
+    .pagination { margin-top: 20px; }
+    .pagination a { margin: 0 4px; padding: 6px 12px; background: #ddd; border-radius: 4px; text-decoration: none; }
+    .pagination a.active { background: #4CAF50; color: white; }
+  </style>
+</head>
+<body>
+  <h1>Student Management System</h1>
+
+  <% if (success) { %>
+    <div class="success"><%= success %></div>
+  <% } %>
+  <% if (error) { %>
+    <div class="error"><%= error %></div>
+  <% } %>
+
+  <a href="/view/students/new" class="btn btn-green">+ Add Student</a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Roll Number</th>
+        <th>Created At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (students.length === 0) { %>
+        <tr><td colspan="5" style="text-align:center">No students found.</td></tr>
+      <% } %>
+      <% students.forEach((student, i) => { %>
+        <tr>
+          <td><%= (pagination.page - 1) * pagination.limit + i + 1 %></td>
+          <td><%= student.name %></td>
+          <td><%= student.roll %></td>
+          <td><%= new Date(student.createdAt).toLocaleDateString() %></td>
+          <td>
+            <a href="/view/students/<%= student._id %>/edit" class="btn btn-blue">Edit</a>
+            <form action="/view/students/<%= student._id %>/delete" method="POST" style="display:inline">
+              <button type="submit" class="btn btn-red" onclick="return confirm('Delete this student?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <% for (let i = 1; i <= pagination.pages; i++) { %>
+      <a href="/view/students?page=<%= i %>" class="<%= i === pagination.page ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+  </div>
+</body>
+</html>
